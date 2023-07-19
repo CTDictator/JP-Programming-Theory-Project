@@ -7,12 +7,15 @@ using static UnityEngine.GraphicsBuffer;
 public abstract class SingleCell : MonoBehaviour
 {
     protected enum EnergyState { low, high, max_energy_state };
+    protected const float energyRateMultiplier = 10.0f;
 
     [SerializeField] protected EnergyState cellState;
     [SerializeField] protected int cellStrength;
     [SerializeField] protected float cellEnergy;
+    [SerializeField] protected float cellEnergyMax;
     [SerializeField] protected float energyRate;
     [SerializeField] protected float cellSpeed;
+    [SerializeField] protected float cellSpeedModifier;
     [SerializeField] protected float cellRotation;
 
     // ENCAPSULATION
@@ -23,9 +26,12 @@ public abstract class SingleCell : MonoBehaviour
 
     protected abstract void MoveCell();
 
+    // Changes the energy level of the cell over time.
     protected void ChangeCellEnergy()
     {
-        cellEnergy += Time.deltaTime * energyRate;
+        // Burn energy a lot quicker in high energy cell state.
+        cellEnergy += Time.deltaTime * energyRate * 
+            (cellState == EnergyState.high ? energyRateMultiplier : 1.0f);
         if (cellEnergy < 0) Destroy(gameObject);
     }
 

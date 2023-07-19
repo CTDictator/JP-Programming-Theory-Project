@@ -7,11 +7,6 @@ public class PlayerCell : SingleCell
 {
     //ENCAPSULATION
     private float verticalInput, horizontalInput;
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
 
     // Update is called once per frame
     private void Update()
@@ -34,8 +29,7 @@ public class PlayerCell : SingleCell
         transform.Rotate(Vector3.up * horizontalInput * Time.deltaTime * cellRotation);
         if (horizontalInput != 0)
         {
-            transform.Translate(Vector3.forward * Time.deltaTime * cellSpeed/3);
+            transform.Translate(Vector3.forward * Time.deltaTime * cellSpeed / 3);
         }
-        // transform.Translate(Vector3.forward * Time.deltaTime * cellSpeed / 3);
     }
 }
