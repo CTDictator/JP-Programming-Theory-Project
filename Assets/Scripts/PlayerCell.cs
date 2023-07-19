@@ -14,10 +14,12 @@ public class PlayerCell : SingleCell
     }
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
         // Move the player cell.
         MoveCell();
+        // Decay the player cells energy.
+        ChangeCellEnergy();
     }
 
     // Takes player inputs and moves the cell accordingly.

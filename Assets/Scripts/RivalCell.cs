@@ -14,7 +14,18 @@ public class RivalCell : SingleCell
     // Update is called once per frame
     void Update()
     {
+        // Move the rival cell.
         MoveCell();
+        // Decay the rival cells energy.
+        ChangeCellEnergy();
+    }
+
+    // After a little bit of time, continue to keep track of target if within range.
+    private IEnumerator ForgetTarget()
+    {
+        yield return new WaitForSeconds(2);
+        // <-
+        target = null;
     }
 
     protected override void MoveCell()
@@ -22,8 +33,11 @@ public class RivalCell : SingleCell
         // Move forward.
         transform.Translate(Vector3.forward * Time.deltaTime * cellSpeed);
 
+        // If it's spotted a target, decided whether to flee the target or pursue it.
         if (target != null)
         {
+            // Start a countdown for a memory check of the target.
+            StartCoroutine(ForgetTarget());
             if (cellStrength > target.GetComponent<SingleCell>().Strength)
             {
                 FollowTarget();

@@ -459,9 +459,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c4ff5a16248c38d4197b5da0477f9954, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cellState: 0
+  cellStrength: 3
+  cellEnergy: 100
+  energyRate: -1
   cellSpeed: 5
   cellRotation: 100
-  cellStrength: 3
 --- !u!4 &1008617058
 Transform:
   m_ObjectHideFlags: 0
@@ -679,9 +682,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9dd9e4eaf49c3704abc13d8943506604, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cellState: 0
+  cellStrength: 2
+  cellEnergy: 100
+  energyRate: -1
   cellSpeed: 10
   cellRotation: 200
-  cellStrength: 2
 --- !u!136 &1453610184
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -728,7 +734,7 @@ Rigidbody:
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
   m_UseGravity: 1
-  m_IsKinematic: 1
+  m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
