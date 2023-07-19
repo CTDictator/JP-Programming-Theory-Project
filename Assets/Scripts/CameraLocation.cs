@@ -13,10 +13,13 @@ public class CameraLocation : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void LateUpdate()
     {
-        // Follow the player.
-        transform.position = new(focusTarget.transform.position.x, 
-            transform.position.y, focusTarget.transform.position.z);
+        // Follow the player if they are alive.
+        if (focusTarget != null)
+        {
+            transform.position = new(focusTarget.transform.position.x,
+                transform.position.y, focusTarget.transform.position.z);
+        }
     }
 }

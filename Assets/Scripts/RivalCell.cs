@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class RivalCell : SingleCell
 {
-    private Transform target;
+    private Transform target = null;
     // Start is called before the first frame update
     void Start()
     {
@@ -24,8 +24,14 @@ public class RivalCell : SingleCell
 
         if (target != null)
         {
-            //FollowTarget();
-            //FleeTarget();
+            if (cellStrength > target.GetComponent<SingleCell>().Strength)
+            {
+                FollowTarget();
+            }
+            else
+            {
+                FleeTarget();
+            }
         }
     }
 
