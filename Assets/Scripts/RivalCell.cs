@@ -5,10 +5,16 @@ using UnityEngine.UIElements;
 
 public class RivalCell : SingleCell
 {
-    private Transform target = null;
-    private const float trackingDistance = 10.0f;
+    [SerializeField] private GameObject target = null;
+    private const float trackingDistance = 15.0f;
     private const float closeEnoughAngle = 60.0f;
     private const float cellCriticalFraction = 5.0f;
+
+    // Spawn in facing a random direction.
+    private void Start()
+    {
+        SetRandomDirection();
+    }
 
     // Update is called once per frame
     void Update()
@@ -17,6 +23,8 @@ public class RivalCell : SingleCell
         MoveCell();
         // Decay the rival cells energy.
         ChangeCellEnergy();
+        // Perform Mitosis when the conditions are met.
+        if (Input.GetKeyDown(KeyCode.KeypadEnter)) Mitosis();
     }
 
     // After a little bit of time, continue to keep track of target if within range.
@@ -58,7 +66,7 @@ public class RivalCell : SingleCell
             }
             else
             {
-                // Avoid the target at all costs, and don't blindly charge the threat.
+                // Avoid the target if its close and don't blindly charge the threat.
                 if (!IsTargetInFront() && !IsHibernating()) cellState = EnergyState.high;
                 FleeTarget();
             }
@@ -96,7 +104,7 @@ public class RivalCell : SingleCell
     private void FleeTarget()
     {
         Quaternion rotTarget = Quaternion.LookRotation(
-                new Vector3(-target.position.x, 0.0f, -target.position.z) -
+                new Vector3(-target.gameObject.transform.position.x, 0.0f, -target.gameObject.transform.position.z) -
                 new Vector3(-transform.position.x, 0.0f, -transform.position.z));
         transform.rotation = Quaternion.RotateTowards(transform.rotation, rotTarget, cellRotation * Time.deltaTime);
     }
@@ -105,7 +113,7 @@ public class RivalCell : SingleCell
     private void FollowTarget()
     {
         Quaternion rotTarget = Quaternion.LookRotation(
-                new Vector3(target.position.x, 0.0f, target.position.z) -
+                new Vector3(target.gameObject.transform.position.x, 0.0f, target.gameObject.transform.position.z) -
                 new Vector3(transform.position.x, 0.0f, transform.position.z));
         transform.rotation = Quaternion.RotateTowards(transform.rotation, rotTarget, cellRotation * Time.deltaTime);
     }
@@ -115,7 +123,34 @@ public class RivalCell : SingleCell
     {
         if (other.gameObject.CompareTag("Cell"))
         {
-            target = other.gameObject.transform;
+            // If no target tracked, track this one.
+            if (target == null) target = other.gameObject;
+            // Threatening targets are the biggest worry.
+            else if (other.gameObject.GetComponent<SingleCell>().Strength > cellStrength)
+            {
+                // If the new target is even more threatening than the previous one, track this instead.
+                if (other.gameObject.GetComponent<SingleCell>().Strength > 
+                    target.gameObject.GetComponent<SingleCell>().Strength)
+                {
+                    target = other.gameObject;
+                }
+            }
+            // Weaker prey takes lower priority.
+            else if (other.gameObject.GetComponent<SingleCell>().Strength < cellStrength)
+            {
+                // If the new target is even more tastier than the previous one, track this instead.
+                if (other.gameObject.GetComponent<SingleCell>().Strength >
+                    target.gameObject.GetComponent<SingleCell>().Strength)
+                {
+                    target = other.gameObject;
+                }
+            }
+        }
+        // Small food globules take lowest priority for targetting.
+        else if (other.gameObject.CompareTag("Food") && target == null)
+        {
+            // If there is nothing more interesting, get the food.
+            target = other.gameObject;
         }
     }
 }

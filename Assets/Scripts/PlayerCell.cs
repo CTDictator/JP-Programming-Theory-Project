@@ -8,6 +8,12 @@ public class PlayerCell : SingleCell
     //ENCAPSULATION
     private float verticalInput, horizontalInput;
 
+    // Spawn in facing a random direction.
+    private void Start()
+    {
+        SetRandomDirection();
+    }
+
     // Update is called once per frame
     private void Update()
     {
@@ -21,9 +27,11 @@ public class PlayerCell : SingleCell
     // POLYMORPHISM & ABSTRACTION
     protected override void MoveCell()
     {
+        // Adjust cell speed based on its energy state.
+        cellSpeedModifier = (cellState == EnergyState.low) ? 1.0f : 3.0f;
         // Forward/backward.
         verticalInput = Input.GetAxis("Vertical");
-        transform.Translate(Vector3.forward * verticalInput * Time.deltaTime * cellSpeed);
+        transform.Translate(Vector3.forward * verticalInput * Time.deltaTime * cellSpeed * cellSpeedModifier);
         // Left/Right.
         horizontalInput = Input.GetAxis("Horizontal");
         transform.Rotate(Vector3.up * horizontalInput * Time.deltaTime * cellRotation);
@@ -31,5 +39,8 @@ public class PlayerCell : SingleCell
         {
             transform.Translate(Vector3.forward * Time.deltaTime * cellSpeed / 3);
         }
+        // Holding spacebar enters player into high energy state.
+        if (Input.GetKey(KeyCode.Space)) cellState = EnergyState.high;
+        else cellState = EnergyState.low;
     }
 }
