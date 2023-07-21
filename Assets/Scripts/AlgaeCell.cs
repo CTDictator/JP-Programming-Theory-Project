@@ -4,15 +4,12 @@ using UnityEngine;
 
 public class AlgaeCell : MeatCell
 {
-    // Variables to regulate overpopulation.
-    private static int populationMax = 100;
-    private static int populationCurrent;
     // Start is called before the first frame update
     private void Start()
     {
         StartCoroutine(ResetForces());
         SetRandomDirection();
-        populationCurrent++;
+        GameManager.CurrentAlgae++;
     }
 
     // Update is called once per frame
@@ -27,7 +24,7 @@ public class AlgaeCell : MeatCell
     {
         if (cellEnergy < cellEnergyMax) cellEnergy += Time.deltaTime * energyRate;
         // Once the algae is topped up on energy, perform mitosis.
-        if (cellEnergy > cellEnergyMax && populationCurrent <= populationMax)
+        if (cellEnergy > cellEnergyMax && GameManager.CurrentAlgae <= GameManager.MaxAlgae)
         {
             cellEnergy = 0.0f;
             Mitosis();
@@ -37,7 +34,7 @@ public class AlgaeCell : MeatCell
     // Detract the population on death.
     private void OnDestroy()
     {
-        populationCurrent--;
+        GameManager.CurrentAlgae--;
     }
 
     protected override void Mitosis()

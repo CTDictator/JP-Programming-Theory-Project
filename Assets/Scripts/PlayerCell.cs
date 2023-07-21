@@ -21,6 +21,7 @@ public class PlayerCell : SingleCell
         MoveCell();
         // Decay the player cells energy.
         ChangeCellEnergy();
+        //if (Input.GetKeyDown(KeyCode.Q)) Mitosis();
     }
 
     // Takes player inputs and moves the cell accordingly.
@@ -42,5 +43,29 @@ public class PlayerCell : SingleCell
         // Holding spacebar enters player into high energy state.
         if (Input.GetKey(KeyCode.Space)) cellState = EnergyState.high;
         else cellState = EnergyState.low;
+    }
+
+    // Split the cell into two if conditions are met.
+    protected override void Mitosis()
+    {
+        // Has to be at least minimum size to split.
+        if (cellStrength >= minMitosisSize)
+        {
+            StartCoroutine(ResetForces());
+            // Calculate how many levels the cell is dropping.
+            int dropInCellStrength = cellStrength - (cellStrength / minMitosisSize);
+            cellStrength /= minMitosisSize;
+            cellEnergy /= minMitosisSize;
+            // Lower the cells stats respectively.
+            for (int i = 0; i < dropInCellStrength; ++i)
+            {
+                cellEnergyMax -= cellMaxEnergyIncrease;
+                energyRate -= cellEnergyRateIncrease;
+                cellSpeed -= cellSpeedIncrease;
+                transform.localScale -= Vector3.one * cellSizeIncrease;
+            }
+            // Make the copy.
+            Instantiate(gameObject, transform.position, transform.rotation);
+        }
     }
 }

@@ -5,21 +5,28 @@ using UnityEngine;
 public class CameraLocation : MonoBehaviour
 {
     private GameObject focusTarget;
-    // Start is called before the first frame update
-    void Start()
+
+    private void Start()
     {
-        // Set the focus location on the player at the start.
-        focusTarget = GameObject.Find("Player Cell");
+        focusTarget = GameObject.Find("Player Cell(Clone)");
     }
 
     // Update is called once per frame
-    void LateUpdate()
+    private void LateUpdate()
     {
         // Follow the player if they are alive.
         if (focusTarget != null)
         {
             transform.position = new(focusTarget.transform.position.x,
                 transform.position.y, focusTarget.transform.position.z);
+        }
+        else
+        {
+            focusTarget = GameObject.Find("Player Cell(Clone)");
+            if (focusTarget == null )
+            {
+                GameManager.IsGameOver = true;
+            }
         }
     }
 }

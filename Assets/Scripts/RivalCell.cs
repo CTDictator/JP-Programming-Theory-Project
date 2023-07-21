@@ -13,6 +13,7 @@ public class RivalCell : SingleCell
     // Spawn in facing a random direction.
     private void Start()
     {
+        GameManager.CurrentRivals++;
         SetRandomDirection();
     }
 
@@ -24,7 +25,6 @@ public class RivalCell : SingleCell
         // Decay the rival cells energy.
         ChangeCellEnergy();
         // Perform Mitosis when the conditions are met.
-        if (Input.GetKeyDown(KeyCode.KeypadEnter)) Mitosis();
     }
 
     // After a little bit of time, continue to keep track of target if within range.
@@ -118,7 +118,7 @@ public class RivalCell : SingleCell
         transform.rotation = Quaternion.RotateTowards(transform.rotation, rotTarget, cellRotation * Time.deltaTime);
     }
 
-    // If the cell spots another cell, track it.
+    // If the cell spots another cell from an opposing team, track it.
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.CompareTag("Cell"))
@@ -152,5 +152,10 @@ public class RivalCell : SingleCell
             // If there is nothing more interesting, get the food.
             target = other.gameObject;
         }
+    }
+
+    private void OnDestroy()
+    {
+        GameManager.CurrentRivals--;
     }
 }
